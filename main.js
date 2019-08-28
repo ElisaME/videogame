@@ -3,8 +3,8 @@ const ctx = canvas.getContext('2d')
 let interval
 let frames = 0
 let obstacles = []
-let coins = []
-let money = 0
+let computers = []
+let points = 0
 //Clases
 class Board{
     constructor(){
@@ -60,15 +60,15 @@ class Girl{
     constructor(x,y){
         this.x = x
         this.y = y
-        this.width = 20
-        this.height = 20
+        this.width = 40
+        this.height = 40
         this.img = new Image()
-        this.img.src = './assets/girl.png'
+        this.img.src = './assets/girl_1.png'
     }
     draw(){
-        ctx.fillStyle = 'white'
-        ctx.fillRect(this.x, this.y, this.width, this.height)
-        //ctx.drawImage(this.img,this.x,this.y)
+        // ctx.fillStyle = 'white'
+        // ctx.fillRect(this.x, this.y, this.width, this.height)
+        ctx.drawImage(this.img,this.x,this.y, this.width, this.height)
         //ctx.drawImage(this.img, 0, 0, 85, 85, this.x, this.y, 85, 85)
     }
     top(){
@@ -92,11 +92,11 @@ class Girl{
         this.x -= 10
     }
     moveUp(){
-        if (this.top() > 320-this.height*2)
+        if (this.top() > 320-this.height/2)
         this.y -= 10
     }
     moveDown(){
-        if (this.bottom() < canvas.height-50)
+        if (this.bottom() < canvas.height)
         this.y += 10
     }
     crashing(object) {
@@ -108,16 +108,15 @@ class Girl{
     }
 }
 
-class Coin{
+class Computer{
     constructor(x,y){
         this.active = true
         this.x = x
         this.y = y
-        this.width = 15
-        this.height = 15
+        this.width = 40
+        this.height = 40
         this.img = new Image()
-        //this.type = type
-        this.img.src = './assets/coin.png'
+        this.img.src = './assets/computer.png'
     }
     draw(){
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
@@ -159,6 +158,36 @@ class Obstacle{
     }
     right(){
         return this.x + this.width
+    }
+}
+
+class Enemie{
+    constructor(x, y, type){
+        this.x = x
+        this.y = y
+        this.width = 20
+        this.height = 20
+        this.img = new Image()
+        this.img.src = this.getImage()
+        this.type = type
+    }
+    getImage(){
+        switch (type) {
+            case amazon:
+                return './assets/amazon.png'
+                break;
+            case antojo:
+                return './assets/dona.png'
+                break; 
+            case chela:
+                return './assets/beer.png'
+                break;
+            default:
+                break;
+        }
+    }
+    draw(){
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
     }
 }
 //Instancias
@@ -213,8 +242,8 @@ function gameOver() {
     clearInterval(interval)
 }
 
-//Coins
-function createCoins(){
+//Computers
+function createComputers(){
     if (frames % 150 === 0) {
         let minX = 0
         let maxX = 900
@@ -222,24 +251,33 @@ function createCoins(){
         let maxY = 600
         let x = Math.floor(Math.random() * (maxX-minX + 1) + minX)
         let y = Math.floor(Math.random() * (maxY-minY + 1) + minY)
-        coins.push(new Coin(x,y))
+        computers.push(new Computer(x,y))
         // console.log(x)        
         // console.log(y)
     }
 }
-function drawCoins(){
-    coins.forEach(object =>{
-        if (object.active){
-        object.draw()}
+function drawComputers(){
+    computers.forEach(computer =>{
+        if (computer.active){
+        computer.draw()}
     })
 }
-function pickCoin(){
-    coins.forEach(coin => {
-        if(girl.crashing(coin)){
-            coin.active = false
-            money++
+function pickComputer(){
+    computers.forEach(object => {
+        if(girl.crashing(object)){
+            let index = computers.indexOf(object);
+            computers.splice(index, 1);
+            object.active = false
+            points ++
         } 
     })
+}
+
+//Score
+function drawScore(){
+    ctx.font = '20px Impact'
+    ctx.fillStyle='#000000'
+    ctx.fillText(`Dinero: $${points}`, 50, 50)
 }
 //Update Canvas
 function updateCanvas(){
@@ -252,10 +290,11 @@ function updateCanvas(){
     girl.draw()
     createObstacles()
     drawObstacles()
-    createCoins()
-    drawCoins()
+    createComputers()
+    drawComputers()
     checkCollition()
-    pickCoin()
+    pickComputer()
+    drawScore()
 }
 
 //Iniciar Juego
