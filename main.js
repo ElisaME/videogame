@@ -1,4 +1,5 @@
 const cover = document.querySelector('.cover')
+const instructions = document.querySelector('.instructions')
 const start = document.getElementById('start')
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
@@ -21,8 +22,6 @@ class Board{
         this.onload = () => {
             this.draw()
         }
-        this.buttonImg = new Image()
-        this.buttonImg.src = './assets/start_button.png'
     }
     drawImage(){
          //Board with infinite loop
@@ -49,9 +48,6 @@ class Board{
         ctx.lineTo(canvas.width, 590)
         ctx.stroke()
         ctx.closePath()
-    }
-    drawButton(){
-        ctx.drawImage(this.buttonImg ,320,270,270,90)
     }
     drawText(){
         ctx.fillStyle='white'
@@ -105,10 +101,10 @@ class Girl{
     }
     crashing(object) {
         return (
-            this.x < object.x + object.width &&
-            this.x + this.width > object.x &&
-            this.y < object.y + object.height &&
-            this.y + this.height > object.y)
+            this.x-15 < object.x + object.width &&
+            this.x-15 + this.width-15 > object.x &&
+            this.y-15 < object.y + object.height &&
+            this.y-15 + this.height-15 > object.y)
     }
 }
 
@@ -215,6 +211,8 @@ function checkCollition() {
     })
 }
 
+////******BONUS****** ------ BIG ENEMIE /
+
   //GameOver
 function gameOver() {
     ctx.font = '50px Alegreya'
@@ -284,9 +282,7 @@ function updateCanvas(){
     frames += 1
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     board.drawImage()
-    board.drawRoad() 
-    // board.drawButton()
-    // board.drawText()
+    board.drawRoad()
     girl.draw()
     createObstacles()
     drawObstacles()
@@ -308,7 +304,9 @@ document.onkeydown= (e) =>{
     e.preventDefault()
     switch (e.keyCode) {
         case 32:
-            start()
+            instructions.style.display='none'
+            canvas.style.display='block'
+            loadGame()
             break;
         case 39:
             girl.moveRight()
@@ -330,6 +328,5 @@ document.onkeydown= (e) =>{
 start.addEventListener('click',() =>{
     cover.style.display='none'
     start.style.display='none'
-    canvas.style.display='block'
-    loadGame()
+    instructions.style.display='block'
 })

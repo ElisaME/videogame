@@ -6,17 +6,28 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" type="image/png" sizes="96x96" href="./assets/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Alegreya:900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Alegreya:500,900&display=swap" rel="stylesheet">
     <title>Sobrevive a la quincena</title>
 </head>
 <body>
     <div class="container">
         <div class="cover">
-            <ul>
+            
+            <button id="start">CONTINUE</button><!-- <ul>
                 <li class="controls">Usa ⇧ ⇩ ⇦ ⇨</li>
-                <li id=start>START</li>
-            </ul>
+                <li id=start>CONTINUE</li>
+            </ul> -->
             <!--<button>START</button>-->
+        </div>
+        <div class="instructions">
+            <p>1. Usa ⇧ ⇩ ⇦ ⇨ para moverte</p>
+            <p>2. Obtén dinero al trabajar: atrapa una <img src="./assets/computer.png" alt=""> y obtén $100</p>
+            <p>3. Evita el gasto hormiga y no pierdas todo tu dinero
+            <p>Tus enemigos: 
+            <img src="./assets/amazon.png" alt=""> 
+            <img src="./assets/beer.png" alt="">
+            <img src="./assets/dona.png" alt="">  te harán perder $30 c/u</p>
+            <p>Presiona SPACE BAR para empezar.</p>
         </div>
         <canvas id="canvas" width="900" height="600"></canvas>
         <script src="./main.js"></script>

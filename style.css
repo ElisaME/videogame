@@ -8,22 +8,36 @@ body{
     height: 600px;
     position: relative;
 }
+.instructions{
+    display: none;
+    width:900px;
+    height: 600px;
+    border: 4px dashed #FBE6B1;
+    font-family: 'Alegreya';
+    font-size:2rem;
+    padding: 5%;
+    box-sizing: border-box;
+    font-weight: 500;
+}
+.instructions img{
+    height:30px;
+    width: auto;
+}
 canvas{
     border:4px dashed #FBE6B1;
     display: none;
-}
-li{
-    display: inline;
-    list-style: none;
+} 
+#start{
+    position: absolute;
+    bottom: 6%;
+    left: 37%;
+    font-size: 2rem;
     font-family: 'Alegreya';
     padding: 0 20px;
-    color:#a86d81;
-}
-ul{
-    position: absolute;
-    bottom: 3%;
-    left: 27%;
-    font-size: 2rem;
+    color: #a86d81;
+    border-radius: 20px;
+    border: 2px solid #a86d81;
+    background-color: transparent;
 }
 .container{
     display: flex;
