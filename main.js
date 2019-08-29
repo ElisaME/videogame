@@ -1,10 +1,14 @@
+const cover = document.querySelector('.cover')
+const start = document.getElementById('start')
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 let interval
 let frames = 0
 let obstacles = []
 let computers = []
-let points = 0
+let enemies = []
+let points = 100
+let types = ['amazon','antojo','chela','computadora']
 //Clases
 class Board{
     constructor(){
@@ -60,8 +64,8 @@ class Girl{
     constructor(x,y){
         this.x = x
         this.y = y
-        this.width = 40
-        this.height = 40
+        this.width = 50
+        this.height = 50
         this.img = new Image()
         this.img.src = './assets/girl_1.png'
     }
@@ -108,33 +112,6 @@ class Girl{
     }
 }
 
-class Computer{
-    constructor(x,y){
-        this.active = true
-        this.x = x
-        this.y = y
-        this.width = 40
-        this.height = 40
-        this.img = new Image()
-        this.img.src = './assets/computer.png'
-    }
-    draw(){
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
-    }
-    top(){
-        return this.y
-    }
-    bottom(){
-        return this.y + this.height
-    }
-    left(){
-        return this.x
-    }
-    right(){
-        return this.x + this.width
-    }
-}
-
 class Obstacle{
     constructor(x,y,width,height){
         this.x = x
@@ -163,25 +140,29 @@ class Obstacle{
 
 class Enemie{
     constructor(x, y, type){
+        this.active = true
         this.x = x
         this.y = y
-        this.width = 20
-        this.height = 20
-        this.img = new Image()
-        this.img.src = this.getImage()
+        this.width = 30
+        this.height = 30
         this.type = type
+        this.img = new Image()
+        this.img.src = this.getImage(this.type)
     }
-    getImage(){
+    getImage(type){
         switch (type) {
-            case amazon:
+            case 'amazon':
+                this.width += 20
                 return './assets/amazon.png'
                 break;
-            case antojo:
+            case 'antojo':
                 return './assets/dona.png'
                 break; 
-            case chela:
+            case 'chela':
                 return './assets/beer.png'
                 break;
+            case 'computadora':
+                return './assets/computer.png'
             default:
                 break;
         }
@@ -226,7 +207,7 @@ function randomColor(){
     return color
 }
 
-//CheckCollition
+//CheckCollition with Obstacles
 function checkCollition() {
     if (girl.y > canvas.height - girl.height) return gameOver()
     obstacles.forEach(obstacle => {
@@ -242,42 +223,51 @@ function gameOver() {
     clearInterval(interval)
 }
 
-//Computers
-function createComputers(){
-    if (frames % 150 === 0) {
-        let minX = 0
-        let maxX = 900
+//Enemies 
+function createEnemies(){
+    if(frames % 150 === 0){
         let minY = 330
         let maxY = 600
-        let x = Math.floor(Math.random() * (maxX-minX + 1) + minX)
+        let x= canvas.width
         let y = Math.floor(Math.random() * (maxY-minY + 1) + minY)
-        computers.push(new Computer(x,y))
-        // console.log(x)        
-        // console.log(y)
+        let type = types[Math.floor(Math.random() * types.length)]
+        enemies.push(new Enemie(x,y,type))
     }
 }
-function drawComputers(){
-    computers.forEach(computer =>{
-        if (computer.active){
-        computer.draw()}
+
+function drawEnemies(){
+    enemies.forEach(e =>{
+        if (e.active){
+        e.x -= 1
+        e.draw()}
     })
 }
-function pickComputer(){
-    computers.forEach(object => {
-        if(girl.crashing(object)){
-            let index = computers.indexOf(object);
-            computers.splice(index, 1);
-            object.active = false
-            points ++
+
+function crashObject(){
+    enemies.forEach(element => {
+        if(girl.crashing(element)){
+            let index = enemies.indexOf(element);
+            enemies.splice(index, 1);
+            element.active = false
+            if(element.type == 'computadora'){
+                points += 100
+            }else{
+                points -= 30
+            }
         } 
     })
 }
 
 //Score
 function drawScore(){
-    ctx.font = '20px Impact'
+    let moneyDraw = new Image()
+    moneyDraw.src = './assets/money.png'
+    ctx.drawImage(moneyDraw,0,0,80,40)
+    ctx.fillStyle="#FFFFFF";
+    ctx.fillRect(70,10,points,25);
+    ctx.font = '20px Courier'
     ctx.fillStyle='#000000'
-    ctx.fillText(`Dinero: $${points}`, 50, 50)
+    ctx.fillText(`$${points}`, 70, 30)
 }
 //Update Canvas
 function updateCanvas(){
@@ -290,10 +280,10 @@ function updateCanvas(){
     girl.draw()
     createObstacles()
     drawObstacles()
-    createComputers()
-    drawComputers()
+    createEnemies()
+    drawEnemies()
     checkCollition()
-    pickComputer()
+    crashObject()
     drawScore()
 }
 
@@ -301,16 +291,10 @@ function updateCanvas(){
 function loadGame() {
     interval = setInterval(updateCanvas, 1000/60)
 }
-//aun no se usa esta
-function start(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    board.drawImage()
-    board.drawRoad()
-    girl.draw()
-}
 
 //Listeners
 document.onkeydown= (e) =>{
+    e.preventDefault()
     switch (e.keyCode) {
         case 32:
             start()
@@ -331,5 +315,10 @@ document.onkeydown= (e) =>{
             break;
     }
 }
-
-loadGame()
+start.addEventListener('click',() =>{
+    cover.style.display='none'
+    start.style.display='none'
+    canvas.style.display='block'
+    loadGame()
+})
+//loadGame()

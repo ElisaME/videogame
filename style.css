@@ -1,7 +1,32 @@
+body{
+    background-color:#C9B5D2;
+    padding:2%;
+}
+.cover{
+    background-image: url('./assets/Sobrevive\ a\ la\ quincena.png');
+    width:900px;
+    height: 600px;
+    position: relative;
+}
 canvas{
-    border:2px solid black;
+    border:4px dashed #FBE6B1;
+    display: none;
+}
+li{
+    display: inline;
+    list-style: none;
+    font-family: 'Alegreya';
+    padding: 0 20px;
+    color:#a86d81;
+}
+ul{
+    position: absolute;
+    bottom: 3%;
+    left: 27%;
+    font-size: 2rem;
 }
 .container{
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 }
