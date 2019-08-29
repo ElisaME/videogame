@@ -217,10 +217,20 @@ function checkCollition() {
 
   //GameOver
 function gameOver() {
-    ctx.font = '50px Impact'
-    ctx.fillStyle='#000000'
-    ctx.fillText('Game Over', canvas.width / 2 - 110, 200)
+    ctx.font = '50px Alegreya'
+    ctx.fillStyle='#FFFFFF'
+    ctx.fillText('GAME OVER', canvas.width / 2 - 110, 200)
     clearInterval(interval)
+}
+
+//Win
+function youWin(){
+    if(points >= 500){
+        ctx.font = '50px Alegreya'
+        ctx.fillStyle='#FFFFFF'
+        ctx.fillText('YOU WIN', canvas.width / 2 - 110, 200)
+        clearInterval(interval)
+    }
 }
 
 //Enemies 
@@ -285,6 +295,7 @@ function updateCanvas(){
     checkCollition()
     crashObject()
     drawScore()
+    youWin()
 }
 
 //Iniciar Juego
@@ -315,10 +326,10 @@ document.onkeydown= (e) =>{
             break;
     }
 }
+//Start Game
 start.addEventListener('click',() =>{
     cover.style.display='none'
     start.style.display='none'
     canvas.style.display='block'
     loadGame()
 })
-//loadGame()
