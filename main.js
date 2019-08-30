@@ -10,6 +10,14 @@ let computers = []
 let enemies = []
 let points = 100
 let types = ['amazon','antojo','chela','computadora']
+let coin_effect = new Audio('./assets/coin_effect.mp3')
+let mordida = new Audio('./assets/mordida.mp3')
+let brindis = new Audio('./assets/brindis.mp3')
+let scanner = new Audio('./assets/scanner.mp3')
+let music = new Audio('./assets/music.mp3')
+music.volume=0.7
+music.loop=true
+
 //Clases
 class Board{
     constructor(){
@@ -60,8 +68,8 @@ class Girl{
     constructor(x,y){
         this.x = x
         this.y = y
-        this.width = 50
-        this.height = 50
+        this.width = 60
+        this.height = 60
         this.img = new Image()
         this.img.src = './assets/girl_1.png'
     }
@@ -101,10 +109,10 @@ class Girl{
     }
     crashing(object) {
         return (
-            this.x-15 < object.x + object.width &&
-            this.x-15 + this.width-15 > object.x &&
-            this.y-15 < object.y + object.height &&
-            this.y-15 + this.height-15 > object.y)
+            this.x + 5 < object.x + object.width &&
+            (this.x + this.width) -15 > object.x &&
+            this.y + 5 < object.y + object.height &&
+            (this.y + this.height) - 15 > object.y)       
     }
 }
 
@@ -139,8 +147,8 @@ class Enemie{
         this.active = true
         this.x = x
         this.y = y
-        this.width = 30
-        this.height = 30
+        this.width = 40
+        this.height = 40
         this.type = type
         this.img = new Image()
         this.img.src = this.getImage(this.type)
@@ -219,6 +227,7 @@ function gameOver() {
     ctx.fillStyle='#FFFFFF'
     ctx.fillText('GAME OVER', canvas.width / 2 - 110, 200)
     clearInterval(interval)
+    music.pause()
 }
 
 //Win
@@ -228,6 +237,7 @@ function youWin(){
         ctx.fillStyle='#FFFFFF'
         ctx.fillText('YOU WIN', canvas.width / 2 - 110, 200)
         clearInterval(interval)
+        music.pause()
     }
 }
 
@@ -258,8 +268,16 @@ function crashObject(){
             enemies.splice(index, 1);
             element.active = false
             if(element.type == 'computadora'){
+                coin_effect.play()
                 points += 100
-            }else{
+            }else if(element.type == 'antojo'){
+                mordida.play()
+                points += 100
+            }else if(element.type == 'chela'){
+                brindis.play()
+                points -= 30
+            }else if(element.type == 'amazon'){
+                scanner.play()
                 points -= 30
             }
         } 
@@ -292,6 +310,7 @@ function updateCanvas(){
     crashObject()
     drawScore()
     youWin()
+    music.play()
 }
 
 //Iniciar Juego
